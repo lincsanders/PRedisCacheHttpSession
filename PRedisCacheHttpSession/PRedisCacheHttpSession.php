@@ -51,4 +51,28 @@ class PRedisCacheHttpSession extends CCacheHttpSession
 		//Carry on as you were...
 		parent::init();
 	}
+
+	public function readSession($id)
+	{
+		$this->_cache->select($this->database);
+		$data=$this->_cache->get($this->calculateKey($id));
+		return $data===false?'':$data;
+	}
+
+	public function writeSession($id,$data)
+	{
+		$this->_cache->select($this->database);
+		return $this->_cache->set($this->calculateKey($id),$data,$this->getTimeout());
+	}
+
+	public function destroySession($id)
+	{
+		$this->_cache->select($this->database);
+	    return $this->_cache->delete($this->calculateKey($id));
+	}
+
+	protected function calculateKey($id)
+	{
+	    return self::CACHE_KEY_PREFIX.$id;
+	}
 }
