@@ -15,7 +15,7 @@ class PRedisCacheHttpSession extends CCacheHttpSession
 	/**
 	 * Cache DB for Redis to select before all operations. This should be unique from your existing Redis Cache DB, which is default 0.
 	 */
-	public $db=9;
+	public $database=9;
 
 	private $_cache;
 
@@ -26,8 +26,12 @@ class PRedisCacheHttpSession extends CCacheHttpSession
 	 */
 	public function init()
 	{
-		if(!class_exists('CRedisCache'))
-			throw new CException('Please ensure that CRedisCache is installed and instantiatable.');
+		try {
+			if(!class_exists('CRedisCache', false))
+				throw new CException('Please ensure that CRedisCache is installed and instantiatable.');
+		} catch(Exception $e){
+			throw new CException($e->getMessage());
+		}
 
 		$cacheClass = get_class(Yii::app()->getComponent($this->cacheID));
 		//Cache has already been instanciated at this point, so go ahead and create an instance of it straight away.
@@ -42,7 +46,7 @@ class PRedisCacheHttpSession extends CCacheHttpSession
 		$this->_cache->init();
 
 		//This is basically the most important line of code - select the unique db on our privately instanciated Cache.
-		$this->_cache->select($this->db);
+		$this->_cache->select($this->database);
 
 		//Carry on as you were...
 		parent::init();
