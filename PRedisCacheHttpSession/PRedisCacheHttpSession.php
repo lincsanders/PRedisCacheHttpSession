@@ -21,7 +21,7 @@ class PRedisCacheHttpSession extends CCacheHttpSession
 
 	/**
 	 * Initializes the application component.
-	 * This method creates the second instance of Redis, to enable us to write cache stuff and perform commands without affecting 
+	 * This method creates the second instance of Redis, to enable us to write cache stuff and perform commands without affecting
 	 * live server cache on other things.
 	 */
 	public function init()
@@ -40,9 +40,9 @@ class PRedisCacheHttpSession extends CCacheHttpSession
 		if(!($this->_cache instanceof ICache))
 			throw new CException(Yii::t('yii','PRedisCacheHttpSession.cacheID is invalid. Please make sure "{id}" refers to a valid cache application component.',
 				array('{id}'=>$this->cacheID)));
-		
+
 		//Pull the existing redis cache servers config and init
-		$this->_cache->servers = app()->getComponent($this->cacheID)->servers;
+		$this->_cache->servers = Yii::app()->getComponent($this->cacheID)->servers;
 		$this->_cache->init();
 
 		//This is basically the most important line of code - select the unique db on our privately instanciated Cache.
